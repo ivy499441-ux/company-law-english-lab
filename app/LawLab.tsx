@@ -355,7 +355,10 @@ export default function LawLab() {
     setAnnotationNoteOpen(false);
     setMobileReaderOpen(true);
     setView("library");
-    window.requestAnimationFrame(() => articleReaderRef.current?.scrollTo({ top: 0, behavior: "smooth" }));
+    window.requestAnimationFrame(() => {
+      articleReaderRef.current?.scrollTo({ top: 0, behavior: "auto" });
+      if (window.matchMedia("(max-width: 760px)").matches) window.scrollTo({ top: 0, behavior: "auto" });
+    });
   }
   function returnToArticleList() {
     setReaderFullscreen(false);
@@ -363,6 +366,7 @@ export default function LawLab() {
     setAnnotationNoteOpen(false);
     setMobileReaderOpen(false);
     window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
       articleListRef.current?.querySelector<HTMLElement>(`[data-article-number="${selectedNumber}"]`)?.scrollIntoView({ block: "center" });
     });
   }
@@ -374,8 +378,10 @@ export default function LawLab() {
   function changeView(nextView: View) {
     if (view === "library" && articleListRef.current) articleListScrollRef.current = articleListRef.current.scrollTop;
     if (nextView === "library" && view !== "library") setMobileReaderOpen(false);
+    setReaderFullscreen(false);
     setArticleStudyOrigin(null);
     setView(nextView);
+    if (window.matchMedia("(max-width: 760px)").matches) window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "auto" }));
   }
 
   function openArticleFromChapter(number: number) {
@@ -696,7 +702,7 @@ export default function LawLab() {
         <div className="coming-soon"><span>待补充资料</span><p>司法解释 · 法考练习</p></div>
       </aside>
 
-      <main className={`main-area ${view === "library" ? "library-mode" : ""}`}>
+      <main className={`main-area ${view === "library" ? "library-mode" : ""} ${mobileReaderOpen ? "mobile-reader-active" : ""}`}>
         <header className="topbar">
           <div><span className="eyebrow">2023 REVISION · EFFECTIVE 1 JULY 2024</span><h1>{view === "library" ? "双语条文库" : view === "learn" ? "课程学习" : "我的学习记录"}</h1></div>
         </header>

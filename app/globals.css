@@ -1089,3 +1089,178 @@ button { color:inherit; }
   .annotation-tools button { min-width:36px; height:36px; font-size:12px; }
   .annotation-note-editor textarea { font-size:16px; }
 }
+
+/* iOS-inspired mobile polish and document scrolling. */
+@media (max-width:760px) {
+  :root { --mobile-green:#096b50; --mobile-bg:#f5f5f7; --mobile-card:#ffffff; --mobile-separator:rgba(60,60,67,.12); }
+  html { background:var(--mobile-bg); }
+  body {
+    background:var(--mobile-bg);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  button,input,select,textarea { -webkit-tap-highlight-color:transparent; }
+
+  .topbar {
+    border-bottom:1px solid var(--mobile-separator);
+    background:rgba(245,245,247,.88);
+    box-shadow:none;
+  }
+  .topbar h1 {
+    color:var(--mobile-green);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+    font-size:21px;
+    font-weight:760;
+    letter-spacing:-.025em;
+  }
+  .main-area:not(.library-mode) { background:var(--mobile-bg); }
+  .main-area.library-mode.mobile-reader-active {
+    height:auto;
+    min-height:calc(100svh - 62px - env(safe-area-inset-bottom));
+    overflow:visible;
+  }
+  .mobile-reader-active .library-layout {
+    height:auto;
+    min-height:calc(100svh - 116px - env(safe-area-inset-bottom));
+    overflow:visible;
+    border-top:0;
+    background:var(--mobile-bg);
+  }
+  .mobile-reader-active .article-reader {
+    height:auto;
+    min-height:calc(100svh - 116px - env(safe-area-inset-bottom));
+    overflow:visible;
+    padding:12px 12px 92px;
+    background:var(--mobile-bg);
+  }
+  .mobile-reader-active .article-reader.fullscreen { height:100svh; min-height:0; overflow-y:auto; background:var(--mobile-bg); }
+  .mobile-reader-active .reader-heading,.mobile-reader-active .article-reader.fullscreen .reader-heading {
+    top:54px;
+    margin:-12px -12px 0;
+    background:rgba(245,245,247,.9);
+    border-color:var(--mobile-separator);
+    box-shadow:0 5px 18px rgba(24,44,37,.05);
+  }
+
+  .sidebar {
+    border-color:var(--mobile-separator);
+    background:rgba(250,250,250,.9);
+    box-shadow:0 -1px 0 rgba(0,0,0,.04),0 -8px 30px rgba(20,37,31,.06);
+  }
+  .main-nav button { border-radius:13px; font-weight:650; transition:background-color .18s ease,color .18s ease,transform .12s ease; }
+  .main-nav button.active { color:var(--mobile-green); background:rgba(9,107,80,.1); }
+  .main-nav button:active { transform:scale(.96); }
+
+  .article-browser { background:var(--mobile-bg); }
+  .search-box {
+    border:0;
+    background:rgba(118,118,128,.11);
+    box-shadow:inset 0 0 0 1px rgba(60,60,67,.035);
+  }
+  .search-box:focus-within { box-shadow:0 0 0 3px rgba(9,107,80,.14); }
+  .search-box input { color:#1d1d1f; }
+  .search-box input::placeholder { color:#85858a; }
+  .filters select {
+    border:0;
+    background:var(--mobile-card);
+    box-shadow:0 1px 2px rgba(0,0,0,.04),0 5px 18px rgba(25,42,36,.045);
+  }
+  .english-import {
+    border:0;
+    background:#eaf5f0;
+    box-shadow:inset 0 0 0 1px rgba(9,107,80,.09);
+  }
+  .english-import.ready { border:0; background:#eaf5f0; }
+  .english-import strong,.english-import.ready strong { color:var(--mobile-green); }
+  .english-import button {
+    border:0;
+    border-radius:10px;
+    background:rgba(255,255,255,.82);
+    color:var(--mobile-green);
+    box-shadow:0 1px 3px rgba(22,48,39,.1);
+  }
+  .topic-strip button { background:#e8e9e7; color:#5f6361; transition:background-color .18s ease,color .18s ease,transform .12s ease; }
+  .topic-strip button.active { background:var(--mobile-green); color:white; box-shadow:0 3px 10px rgba(9,107,80,.2); }
+  .topic-strip button:active { transform:scale(.96); }
+  .article-list { border-color:var(--mobile-separator); background:var(--mobile-card); }
+  .article-list>button { border-color:var(--mobile-separator); transition:background-color .16s ease,transform .1s ease; }
+  .article-list>button:active { background:#eef5f2; }
+  .article-list>button.selected { background:#e7f2ed; box-shadow:inset 4px 0 var(--mobile-green); }
+  .article-preview strong { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif; font-weight:650; letter-spacing:-.01em; }
+  .article-preview small { color:#6e716f; font-family:"New York",Georgia,"Songti SC",serif; }
+
+  .reader-heading h2,.reader-heading h2 em,.topic-label,.mobile-reader-back { font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",sans-serif; }
+  .mobile-reader-back {
+    border:0;
+    border-radius:11px;
+    background:rgba(9,107,80,.1);
+    color:var(--mobile-green);
+  }
+  .reader-actions>button,.reader-stepper,.font-scale-controls {
+    border-color:rgba(60,60,67,.16);
+    border-radius:10px;
+    background:rgba(255,255,255,.9);
+    box-shadow:0 1px 2px rgba(0,0,0,.035);
+  }
+  .reader-actions>button:active,.reader-stepper button:active { background:#e6f1ec; }
+  .translation-grid {
+    border:0;
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(26,42,37,.06);
+  }
+  .translation-grid section { background:var(--mobile-card); }
+  .translation-grid section:nth-of-type(2) { border-color:var(--mobile-separator); background:#fbfbfc; }
+  .language-tag { color:#9a6a22; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif; }
+  .language-tag.english { color:var(--mobile-green); }
+  .translation-grid h3 { color:#202321; font-family:"New York",Georgia,"Songti SC",serif; }
+  .translation-grid p,.translation-grid section[lang="en"] p { color:#292c2a; font-family:"New York",Georgia,"Songti SC",serif; }
+  .note-box,.article-annotation-panel { border:0; border-radius:15px; background:var(--mobile-card); box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(26,42,37,.05); }
+
+  .course-switcher {
+    border-radius:13px;
+    background:rgba(118,118,128,.12);
+  }
+  .course-switcher button { border-radius:10px; transition:background-color .18s ease,box-shadow .18s ease,transform .12s ease; }
+  .course-switcher button.active { color:var(--mobile-green); background:rgba(255,255,255,.94); box-shadow:0 2px 7px rgba(0,0,0,.1); }
+  .course-switcher button:active { transform:scale(.98); }
+  .topic-jump-toggle,.topic-catalog-header,.topic-card,.lesson-focus,.chapter-select-bar,.learning-stage,.stats-grid article,.progress-panels>section,.note-history,.annotation-history {
+    border-color:transparent;
+    background:var(--mobile-card);
+    box-shadow:0 1px 2px rgba(0,0,0,.035),0 7px 24px rgba(24,42,36,.05);
+  }
+  .topic-jump-toggle { border-radius:14px; }
+  .topic-catalog-header { border-radius:17px; }
+  .topic-catalog-header h2,.topic-card h3,.topic-course-header h2,.lesson-heading h2,.section-heading h2,.section-heading.simple h2,.panel-title h2 {
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif;
+    letter-spacing:-.025em;
+  }
+  .topic-catalog-header h2,.topic-card h3,.section-heading h2,.section-heading.simple h2,.panel-title h2 { color:var(--mobile-green); }
+  .topic-card { border:0; border-left:4px solid #c5c7c5; border-radius:16px; }
+  .topic-card.in-progress { border-left-color:#b88431; }
+  .topic-card.completed { border-left-color:var(--mobile-green); }
+  .topic-card-action>button,.learning-navigation button,.lesson-navigation button,.data-panel>button {
+    border:0;
+    border-radius:11px;
+    background:#edf5f1;
+    color:var(--mobile-green);
+  }
+  .topic-card-action>button:active,.learning-navigation button:active,.lesson-navigation button:active,.data-panel>button:active { transform:scale(.98); }
+  .topic-course-header,.chapter-hero,.chapter-hero.compact { background:linear-gradient(145deg,#0d604a,#174f41); box-shadow:0 10px 26px rgba(12,77,59,.16); }
+  .lesson-outline { border:0; background:rgba(255,255,255,.72); }
+  .lesson-outline nav button { border-radius:11px; }
+  .lesson-outline nav button.active { background:rgba(9,107,80,.11); }
+  .opening-question h3,.single-question h3 { font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC",sans-serif; letter-spacing:-.025em; }
+  .reading-passage,.answer-feedback,.default-nodes button,.map-branches button,.single-term,.rule-chain-step article,.rule-conclusion,.statute-focus>div,.case-reading,.model-answer,.course-result {
+    border-radius:15px;
+  }
+  .learning-steps button,.learning-steps.clear button { border:0!important; background:var(--mobile-card); box-shadow:0 1px 2px rgba(0,0,0,.04); }
+  .learning-steps.clear button.active { border:0!important; color:var(--mobile-green); background:#e6f1ec; box-shadow:inset 0 -3px var(--mobile-green); }
+  .concept-grid article,.overview-grid article,.expression-list>article,.key-article-grid button,.term-grid article,.saved-list button,.note-history-list>button,.annotation-history-list>article {
+    border-color:transparent;
+    border-radius:14px;
+    box-shadow:0 1px 2px rgba(0,0,0,.035),0 6px 20px rgba(24,42,36,.045);
+  }
+  .concept-main h3,.term-grid h2,.stats-grid strong { color:var(--mobile-green); }
+  .stats-grid article { border-radius:15px; }
+}
