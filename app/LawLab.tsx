@@ -29,10 +29,10 @@ const initialStudy: StudyState = { learned: [], favorites: [], notes: {}, lastAr
 const storageKey = "company-law-english-lab-v1";
 const englishStorageKey = "company-law-english-text-v1";
 const layoutStorageKey = "company-law-reader-layout-v1";
-const navItems: { id: View; label: string; short: string; sub: string }[] = [
-  { id: "library", label: "双语条文库", short: "条文", sub: "Bilingual Statute" },
-  { id: "learn", label: "课程学习", short: "课程", sub: "Course Learning" },
-  { id: "progress", label: "学习记录", short: "记录", sub: "Local Progress" },
+const navItems: { id: View; label: string; short: string; sub: string; icon: string }[] = [
+  { id: "library", label: "双语条文库", short: "条文", sub: "Bilingual Statute", icon: "▤" },
+  { id: "learn", label: "课程学习", short: "课程", sub: "Course Learning", icon: "◇" },
+  { id: "progress", label: "学习记录", short: "记录", sub: "Local Progress", icon: "✓" },
 ];
 
 type TranslatorStatus = "idle" | "checking" | "downloading" | "ready" | "unsupported" | "error";
@@ -194,6 +194,7 @@ export default function LawLab() {
   const [readerFullscreen, setReaderFullscreen] = useState(false);
   const [readerFontScale, setReaderFontScale] = useState(1.1);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileReaderOpen, setMobileReaderOpen] = useState(false);
   const [selectionDraft, setSelectionDraft] = useState<SelectionDraft | null>(null);
   const [annotationNoteOpen, setAnnotationNoteOpen] = useState(false);
   const [annotationNoteDraft, setAnnotationNoteDraft] = useState("");
@@ -352,8 +353,18 @@ export default function LawLab() {
     setStudy((current) => ({ ...current, lastArticle: number }));
     setSelectionDraft(null);
     setAnnotationNoteOpen(false);
+    setMobileReaderOpen(true);
     setView("library");
     window.requestAnimationFrame(() => articleReaderRef.current?.scrollTo({ top: 0, behavior: "smooth" }));
+  }
+  function returnToArticleList() {
+    setReaderFullscreen(false);
+    setSelectionDraft(null);
+    setAnnotationNoteOpen(false);
+    setMobileReaderOpen(false);
+    window.requestAnimationFrame(() => {
+      articleListRef.current?.querySelector<HTMLElement>(`[data-article-number="${selectedNumber}"]`)?.scrollIntoView({ block: "center" });
+    });
   }
   function commitArticleJump() {
     const number = Number(articleJumpInput);
@@ -362,6 +373,7 @@ export default function LawLab() {
   }
   function changeView(nextView: View) {
     if (view === "library" && articleListRef.current) articleListScrollRef.current = articleListRef.current.scrollTop;
+    if (nextView === "library" && view !== "library") setMobileReaderOpen(false);
     setArticleStudyOrigin(null);
     setView(nextView);
   }
@@ -679,7 +691,7 @@ export default function LawLab() {
           <span aria-hidden="true">{sidebarCollapsed ? "›" : "‹"}</span>
         </button>
         <nav className="main-nav" aria-label="主要功能">
-          {navItems.map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => changeView(item.id)}><span className="nav-label-full">{item.label}</span><span className="nav-label-short">{item.short}</span><small>{item.sub}</small></button>)}
+          {navItems.map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => changeView(item.id)}><span className="nav-icon" aria-hidden="true">{item.icon}</span><span className="nav-label-full">{item.label}</span><span className="nav-label-short">{item.short}</span><small>{item.sub}</small></button>)}
         </nav>
         <div className="coming-soon"><span>待补充资料</span><p>司法解释 · 法考练习</p></div>
       </aside>
@@ -689,7 +701,7 @@ export default function LawLab() {
           <div><span className="eyebrow">2023 REVISION · EFFECTIVE 1 JULY 2024</span><h1>{view === "library" ? "双语条文库" : view === "learn" ? "课程学习" : "我的学习记录"}</h1></div>
         </header>
 
-        {view === "library" && <section ref={libraryLayoutRef} className="library-layout" style={{ "--browser-width": `${browserWidth}%` } as CSSProperties}>
+        {view === "library" && <section ref={libraryLayoutRef} className={`library-layout ${mobileReaderOpen ? "mobile-reader-open" : ""}`} style={{ "--browser-width": `${browserWidth}%` } as CSSProperties}>
           <div className="article-browser">
             <div className="search-box"><span>⌕</span><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索条号、中文或英文关键词" aria-label="搜索条文" /></div>
             <div className="filters"><select value={chapter} onChange={(e) => { setChapter(Number(e.target.value)); setTopic(0); }} aria-label="按章节筛选"><option value={0}>全部章节</option>{lawData.chapters.map((item) => <option key={item.number} value={item.number}>第 {item.number} 章 · {item.titleZh}</option>)}</select><span>{filteredArticles.length} 条</span></div>
@@ -705,7 +717,7 @@ export default function LawLab() {
 
           <article ref={articleReaderRef} className={`article-reader ${readerFullscreen ? "fullscreen" : ""}`} style={{ "--reader-font-scale": readerFontScale } as CSSProperties}>
             <div className="reader-heading">
-              <div className="reader-title-cluster"><div className="reader-title"><span className="topic-label"><b>{selected.topicZh}</b><em>{selected.topicEn}</em></span><div className="article-title-line"><h2>第 {selected.number} 条 <em>Article {selected.number}</em></h2><p>第 {selected.chapter} 章 · {selected.chapterZh}</p></div></div></div>
+              <div className="reader-title-cluster"><button className="mobile-reader-back" onClick={returnToArticleList} aria-label="返回条文列表"><span aria-hidden="true">‹</span>条文列表</button><div className="reader-title"><span className="topic-label"><b>{selected.topicZh}</b><em>{selected.topicEn}</em></span><div className="article-title-line"><h2>第 {selected.number} 条 <em>Article {selected.number}</em></h2><p>第 {selected.chapter} 章 · {selected.chapterZh}</p></div></div></div>
               <div className="reader-actions"><div className="reader-stepper"><button disabled={selected.number === 1} onClick={() => openArticle(selected.number - 1, articleStudyOrigin)} aria-label="上一条" title="上一条">‹</button><label><input value={articleJumpInput} inputMode="numeric" aria-label="输入条文编号" onChange={(event) => setArticleJumpInput(event.target.value.replace(/\D/g, "").slice(0, 3))} onBlur={commitArticleJump} onKeyDown={(event) => { if (event.key === "Enter") { event.currentTarget.blur(); } else if (event.key === "Escape") { setArticleJumpInput(String(selectedNumber)); event.currentTarget.blur(); } }} /><span>/ {lawData.meta.articleCount}</span></label><button disabled={selected.number === lawData.meta.articleCount} onClick={() => openArticle(selected.number + 1, articleStudyOrigin)} aria-label="下一条" title="下一条">›</button></div>{readerFullscreen && <div className="font-scale-controls" aria-label="调整正文大小"><button disabled={readerFontScale <= .8} onClick={() => setReaderFontScale((current) => Math.max(.8, Number((current - .1).toFixed(1))))} aria-label="缩小正文">A−</button><span>{Math.round(readerFontScale * 100)}%</span><button disabled={readerFontScale >= 1.8} onClick={() => setReaderFontScale((current) => Math.min(1.8, Number((current + .1).toFixed(1))))} aria-label="放大正文">A＋</button></div>}<button className={`alignment-control ${translatorStatus === "ready" ? "ready" : ""}`} disabled={translatorStatus === "checking" || translatorStatus === "downloading" || translatorStatus === "unsupported" || translatorStatus === "ready"} onClick={() => void enablePreciseAlignment()} title="首次下载浏览器自带的中英模型，之后在本机离线对齐普通词语">{translatorLabel}</button><button className={study.favorites.includes(selected.number) ? "active" : ""} onClick={() => toggleFavorite(selected.number)} aria-label="收藏本条">{study.favorites.includes(selected.number) ? "★ 已收藏" : "☆ 收藏"}</button><button className={showArticleAnnotations ? "annotation-active" : ""} onClick={() => setShowArticleAnnotations((current) => !current)}>批注 {currentArticleAnnotations.length}</button><button onClick={() => setReaderFullscreen((current) => !current)}>{readerFullscreen ? "退出全屏" : "全屏阅读"} <span aria-hidden="true">{readerFullscreen ? "×" : "⛶"}</span></button>{articleStudyOrigin && <button className="reader-context-back" onClick={returnToStudyOrigin} aria-label={articleStudyOrigin.kind === "topic" ? "返回专题学习" : "返回章节学习"} title={articleStudyOrigin.kind === "topic" ? `返回${articleStudyOrigin.courseLabel} · ${articleStudyOrigin.unitLabel}` : `返回第${articleStudyOrigin.chapter}章学习`}>↩</button>}</div>
             </div>
 
