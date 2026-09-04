@@ -713,7 +713,7 @@ button { color:inherit; }
 }
 /* Mobile: one compact, restrained responsive system. Desktop rules above remain unchanged. */
 @media (max-width:760px) {
-  :root { --mobile-green:#1f5548; --mobile-header:#3f725f; --mobile-cream:#efe3cf; --mobile-bg:#f6f3ec; --mobile-card:#fffef9; --mobile-line:#d8d3c8; --mobile-ink:#0b110f; }
+  :root { --mobile-green:#1f5548; --mobile-header:#245b49; --mobile-cream:#efe3cf; --mobile-bg:#f6f3ec; --mobile-card:#fffef9; --mobile-line:#d8d3c8; --mobile-ink:#0b110f; }
   html,body { width:100%; overflow-x:clip; background:var(--mobile-bg); }
   html { scroll-padding-top:48px; }
   body { color:var(--mobile-ink); font-family:Georgia,"Songti SC","STSong",serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
@@ -735,7 +735,7 @@ button { color:inherit; }
   .main-area { min-height:calc(100svh - 56px); padding:0 0 calc(70px + env(safe-area-inset-bottom)); }
   .main-area.library-mode { height:calc(100svh - 56px - env(safe-area-inset-bottom)); min-height:0; padding:0; overflow:hidden; }
   .topbar { position:sticky; top:0; z-index:60; min-height:48px; padding:0 13px; border-bottom:1px solid #244d40; background:var(--mobile-header); box-shadow:none; backdrop-filter:none; }
-  .topbar h1 { margin:0; color:#050807; font:600 18px/1.2 Georgia,"Songti SC","STSong",serif; letter-spacing:.01em; }
+  .topbar h1 { margin:0; color:#fff; font:600 18px/1.2 Georgia,"Songti SC","STSong",serif; letter-spacing:.01em; }
   .topbar .eyebrow { display:none; }
   .continue-button { min-height:32px; padding:5px 8px; border-color:#244d40; border-radius:5px; background:var(--mobile-cream); color:#111; font-size:12px; }
 
